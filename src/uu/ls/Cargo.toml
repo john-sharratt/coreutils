@@ -15,7 +15,7 @@ edition = "2018"
 path = "src/ls.rs"
 
 [dependencies]
-chrono = "0.4.19"
+chrono = "0.4"
 clap = { version = "2.33", features = ["wrap_help"] }
 unicode-width = "0.1.8"
 number_prefix = "0.4"

@@ -30,6 +30,7 @@ use std::io::{self, Write as IoWrite};
 #[cfg(unix)]
 use std::os::unix::ffi::OsStrExt;
 #[cfg(target_os = "wasi")]
+#[allow(unused_imports)]
 use std::os::wasi::ffi::OsStrExt;
 #[cfg(any(unix, target_os = "wasi"))]
 use std::str::from_utf8;

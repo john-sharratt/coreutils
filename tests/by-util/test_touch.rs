@@ -33,7 +33,7 @@ fn set_file_times(at: &AtPath, path: &str, atime: FileTime, mtime: FileTime) {
 // Adjusts for local timezone
 fn str_to_filetime(format: &str, s: &str) -> FileTime {
     let mut tm = time::strptime(s, format).unwrap();
-    tm.tm_utcoff = time::now().tm_utcoff;
+    tm.tm_utcoff = time::Instant::now().tm_utcoff;
     tm.tm_isdst = -1; // Unknown flag DST
     let ts = tm.to_timespec();
     FileTime::from_unix_time(ts.sec as i64, ts.nsec as u32)
@@ -83,7 +83,7 @@ fn test_touch_set_mdhm_time() {
 
     let start_of_year = str_to_filetime(
         "%Y%m%d%H%M",
-        &format!("{}01010000", 1900 + time::now().tm_year),
+        &format!("{}01010000", 1900 + time::Instant::now().tm_year),
     );
     let (atime, mtime) = get_file_times(&at, file);
     assert_eq!(atime, mtime);
@@ -104,7 +104,7 @@ fn test_touch_set_mdhms_time() {
 
     let start_of_year = str_to_filetime(
         "%Y%m%d%H%M.%S",
-        &format!("{}01010000.00", 1900 + time::now().tm_year),
+        &format!("{}01010000.00", 1900 + time::Instant::now().tm_year),
     );
     let (atime, mtime) = get_file_times(&at, file);
     assert_eq!(atime, mtime);
@@ -450,7 +450,7 @@ fn is_dst_switch_hour(ts: time::Timespec) -> bool {
 // In other locales it will be a different date/time, and in some locales
 // it doesn't exist at all, in which case this function will return None.
 fn get_dst_switch_hour() -> Option<String> {
-    let now = time::now();
+    let now = time::Instant::now();
     // Start from January 1, 2020, 00:00.
     let mut tm = time::strptime("20200101-0000", "%Y%m%d-%H%M").unwrap();
     tm.tm_isdst = -1;

@@ -9,7 +9,6 @@
 extern crate uucore;
 
 use clap::{crate_version, App, Arg};
-use retain_mut::RetainMut;
 use std::fs::OpenOptions;
 use std::io::{copy, sink, stdin, stdout, Error, ErrorKind, Read, Result, Write};
 use std::path::PathBuf;

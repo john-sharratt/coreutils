@@ -217,7 +217,7 @@ impl Capitalize for str {
 
 fn idle_string(when: i64) -> String {
     thread_local! {
-        static NOW: time::Tm = time::now()
+        static NOW: time::Instant = time::Instant::now()
     }
     NOW.with(|n| {
         let duration = n.to_timespec().sec - when;

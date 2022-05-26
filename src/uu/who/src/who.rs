@@ -284,7 +284,7 @@ struct Who {
 
 fn idle_string<'a>(when: i64, boottime: i64) -> Cow<'a, str> {
     thread_local! {
-        static NOW: time::Tm = time::now()
+        static NOW: time::Instant = time::Instant::now()
     }
     NOW.with(|n| {
         let now = n.to_timespec().sec;
