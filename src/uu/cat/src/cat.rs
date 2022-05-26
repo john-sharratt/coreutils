@@ -60,6 +60,7 @@ enum CatError {
     #[error("Is a directory")]
     IsDirectory,
     #[error("input file is output file")]
+    #[allow(dead_code)]
     OutputIsInput,
 }
 
@@ -384,7 +385,7 @@ fn cat_files(files: Vec<String>, options: &OutputOptions) -> UResult<()> {
     let mut error_messages: Vec<String> = Vec::new();
 
     for path in &files {
-        if let Err(err) = cat_path(path, options, &mut state, &out_info) {
+        if let Err(err) = cat_path(path, options, &mut state, #[cfg(any(windows, unix))] &out_info) {
             error_messages.push(format!("{}: {}", path.maybe_quote(), err));
         }
     }

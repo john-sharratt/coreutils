@@ -415,11 +415,14 @@ fn rename_with_fallback(from: &Path, to: &Path) -> io::Result<()> {
 /// Move the given symlink to the given destination. On Windows, dangling
 /// symlinks return an error.
 #[inline]
+#[allow(unused_variables)]
 fn rename_symlink_fallback(from: &Path, to: &Path) -> io::Result<()> {
+    #[allow(unused_variables)]
     let path_symlink_points_to = fs::read_link(from)?;
     #[cfg(unix)]
     {
         unix::fs::symlink(&path_symlink_points_to, &to).and_then(|_| fs::remove_file(&from))?;
+        return Ok(());
     }
     #[cfg(windows)]
     {
@@ -436,6 +439,7 @@ fn rename_symlink_fallback(from: &Path, to: &Path) -> io::Result<()> {
                 "can't determine symlink type, since it is dangling",
             ));
         }
+        return Ok(());
     }
     #[cfg(not(any(windows, unix)))]
     {
@@ -444,7 +448,6 @@ fn rename_symlink_fallback(from: &Path, to: &Path) -> io::Result<()> {
             "your operating system does not support symlinks",
         ));
     }
-    Ok(())
 }
 
 fn read_yes() -> bool {

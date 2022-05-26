@@ -114,6 +114,11 @@ fn mkdir(path: &Path, recursive: bool, mode: u16, verbose: bool) -> UResult<()> 
     chmod(path, mode)
 }
 
+#[cfg(any(target_os = "wasi"))]
+fn chmod(_path: &Path, _mode: u16) -> UResult<()> {
+    Ok(())
+}
+
 #[cfg(any(unix, target_os = "redox"))]
 fn chmod(path: &Path, mode: u16) -> UResult<()> {
     use std::fs::{set_permissions, Permissions};

@@ -9,7 +9,12 @@
 
 // spell-checker:ignore (vars) fperm srwx
 
-use libc::{mode_t, umask, S_IRGRP, S_IROTH, S_IRUSR, S_IWGRP, S_IWOTH, S_IWUSR};
+use libc::{mode_t, S_IRGRP, S_IROTH, S_IRUSR, S_IWGRP, S_IWOTH, S_IWUSR};
+#[cfg(not(target_os = "wasi"))]
+use libc::umask;
+
+#[cfg(target_os = "wasi")]
+pub fn umask(_mask: mode_t) -> mode_t { 0o644 }
 
 pub fn parse_numeric(fperm: u32, mut mode: &str, considering_dir: bool) -> Result<u32, String> {
     let (op, pos) = parse_op(mode).map_or_else(|_| (None, 0), |(op, pos)| (Some(op), pos));
@@ -142,6 +147,7 @@ pub fn parse_mode(mode: &str) -> Result<mode_t, String> {
     result.map(|mode| mode as mode_t)
 }
 
+#[allow(unused_unsafe)]
 pub fn get_umask() -> u32 {
     // There's no portable way to read the umask without changing it.
     // We have to replace it and then quickly set it back, hopefully before

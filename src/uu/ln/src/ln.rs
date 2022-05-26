@@ -6,7 +6,7 @@
 //  * file that was distributed with this source code.
 
 // spell-checker:ignore (ToDO) srcpath targetpath EEXIST
-
+#![feature(wasi_ext)]
 #[macro_use]
 extern crate uucore;
 
@@ -25,6 +25,8 @@ use std::io::{stdin, Result};
 use std::os::unix::fs::symlink;
 #[cfg(windows)]
 use std::os::windows::fs::{symlink_dir, symlink_file};
+#[cfg(target_os = "wasi")]
+use std::os::wasi::fs::symlink_path as symlink;
 use std::path::{Path, PathBuf};
 use uucore::backup_control::{self, BackupMode};
 use uucore::fs::{canonicalize, MissingHandling, ResolveMode};

@@ -428,6 +428,9 @@ impl Config {
                 Ok(u) => u,
                 Err(_) => return Err(LsError::InvalidLineWidth(x.into()).into()),
             },
+            #[cfg(target_os = "wasi")]
+            None => DEFAULT_TERM_WIDTH,
+            #[cfg(not(target_os = "wasi"))]
             None => match termsize::get() {
                 Some(size) => size.cols,
                 None => match std::env::var_os("COLUMNS") {

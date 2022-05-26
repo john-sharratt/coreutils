@@ -22,7 +22,7 @@ number_prefix = "0.4"
 term_grid = "0.1.5"
 termsize = "0.1.6"
 globset = "0.4.6"
-lscolors = { version = "0.7.1", features = ["ansi_term"] }
+lscolors = { version = "0.8", features = ["ansi_term"] }
 uucore = { version = ">=0.0.8", package = "uucore", path = "../../uucore", features = ["entries", "fs"] }
 uucore_procs = { version=">=0.0.6", package = "uucore_procs", path = "../../uucore_procs" }
 once_cell = "1.7.2"

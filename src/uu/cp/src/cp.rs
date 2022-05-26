@@ -9,7 +9,7 @@
 // that was distributed with this source code.
 
 // spell-checker:ignore (ToDO) ficlone linkgs lstat nlink nlinks pathbuf reflink strs xattrs
-
+#![feature(wasi_ext)]
 #[cfg(target_os = "linux")]
 #[macro_use]
 extern crate ioctl_sys;
@@ -31,6 +31,7 @@ use filetime::FileTime;
 use quick_error::ResultExt;
 use std::collections::HashSet;
 use std::env;
+#[allow(unused_imports)]
 #[cfg(not(windows))]
 use std::ffi::CString;
 #[cfg(windows)]
@@ -40,6 +41,7 @@ use std::fs::File;
 use std::fs::OpenOptions;
 use std::io;
 use std::io::{stdin, stdout, Write};
+#[allow(unused_imports)]
 use std::mem;
 #[cfg(target_os = "linux")]
 use std::os::unix::io::AsRawFd;
@@ -760,7 +762,7 @@ fn preserve_hardlinks(
             unsafe {
                 let inode: u64;
                 let nlinks: u64;
-                #[cfg(unix)]
+                #[cfg(any(unix, target_os = "wasi"))]
                 {
                     let src_path = CString::new(source.as_os_str().to_str().unwrap()).unwrap();
                     let mut stat = mem::zeroed();
@@ -968,7 +970,6 @@ fn copy_directory(root: &Path, target: &TargetSlice, options: &Options) -> CopyR
         Some(root_path.as_path())
     };
 
-    #[cfg(unix)]
     let mut hard_links: Vec<(String, u64)> = vec![];
     let mut preserve_hard_links = false;
     for attribute in &options.preserve_attributes {
@@ -976,10 +977,6 @@ fn copy_directory(root: &Path, target: &TargetSlice, options: &Options) -> CopyR
             preserve_hard_links = true;
         }
     }
-
-    // This should be changed once Redox supports hardlinks
-    #[cfg(any(windows, target_os = "redox"))]
-    let mut hard_links: Vec<(String, u64)> = vec![];
 
     for path in WalkDir::new(root)
         .same_file_system(options.one_file_system)
@@ -1146,11 +1143,17 @@ fn copy_attribute(source: &Path, dest: &Path, attribute: &Attribute) -> CopyResu
 }
 
 #[cfg(not(windows))]
-#[allow(clippy::unnecessary_wraps)] // needed for windows version
+#[allow(clippy::unnecessary_wraps, unused_variables)] // needed for windows version
 fn symlink_file(source: &Path, dest: &Path, context: &str) -> CopyResult<()> {
+    #[cfg(not(target_os = "wasi"))]
     match std::os::unix::fs::symlink(source, dest).context(context) {
         Ok(_) => Ok(()),
         Err(_) => Ok(()),
+    }
+    #[cfg(target_os = "wasi")]
+    {
+        let _ = std::os::wasi::fs::symlink_path(source, dest);
+        Ok(())
     }
 }
 
