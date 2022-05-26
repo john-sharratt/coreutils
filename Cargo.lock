@@ -737,7 +737,7 @@ checksum = "31a7a908b8f32538a2143e59a6e4e2508988832d5d4d6f7c156b3cbc762643a5"
 [[package]]
 name = "filetime"
 version = "0.2.16"
-source = "git+https://github.com/john-sharratt/filetime.git#5ab913b8d0a1f8a7c22167ae165eb3d5f84cc71f"
+source = "git+https://github.com/john-sharratt/filetime.git#6e80fbeb05e29ead6ea325ed8e30abb30cc6570c"
 dependencies = [
  "cfg-if 1.0.0",
  "libc",
