@@ -58,7 +58,7 @@
 
 #cp -f target/wasm32-wasi/debug/*.wasm ..//tokera/tokterm/wasm
 
-cargo build --target wasm32-wasi
-chmod +x target/wasm32-wasi/debug/coreutils.wasm
+cargo wasix build
+chmod +x target/wasm32-wasmer-wasi/debug/coreutils.wasm
 
-cp -f target/wasm32-wasi/debug/coreutils.wasm ../tokera/tokterm/wasm/coreutils.wasm
+cp -f target/wasm32-wasmer-wasi/debug/coreutils.wasm ../ate/wasmer-web/public/bin/coreutils.wasm
